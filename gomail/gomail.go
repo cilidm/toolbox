@@ -1,8 +1,8 @@
 package gomail
 
 import (
-	"github.com/cilidm/toolbox/gconv"
 	"github.com/go-gomail/gomail"
+	"strconv"
 )
 
 type MailConfForm struct {
@@ -24,7 +24,10 @@ type Config struct {
 }
 
 func SendMail(conf Config) error {
-	port := gconv.Int(conf.Config.EmailPort)
+	port,err := strconv.Atoi(conf.Config.EmailPort)
+	if err != nil{
+		return err
+	}
 	m := gomail.NewMessage()
 	m.SetHeader("From", m.FormatAddress(conf.Config.EmailUser, conf.Config.EmailName))
 	m.SetHeader("To", conf.MailTo...)
