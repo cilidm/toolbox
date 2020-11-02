@@ -1,8 +1,8 @@
 package gomail
 
 import (
+	"github.com/cilidm/toolbox/gconv"
 	"github.com/go-gomail/gomail"
-	"toolbox/gconv"
 )
 
 type MailConfForm struct {
