@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/boj/redistore"
 	"github.com/gomodule/redigo/redis"
-	"github.com/cilidm/toolbox/session"
+	"toolbox/session"
 )
 
 type Store interface {
