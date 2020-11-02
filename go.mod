@@ -1,4 +1,4 @@
-module toolbox
+module github.com/cilidm/toolbox
 
 go 1.14
 
