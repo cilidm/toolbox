@@ -2,8 +2,8 @@ package store
 
 import (
 	"errors"
-	"github.com/cilidm/toolbox/store/cloud"
 	"reflect"
+	"toolbox/store/cloud"
 )
 
 // 创建云存储
