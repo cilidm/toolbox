@@ -2,18 +2,18 @@ package main
 
 import (
 	"fmt"
+	"github.com/cilidm/toolbox/gomail"
+	"github.com/cilidm/toolbox/gozap"
+	"github.com/cilidm/toolbox/logging"
+	"github.com/cilidm/toolbox/session"
+	"github.com/cilidm/toolbox/session/cookie"
+	"github.com/cilidm/toolbox/store"
 	"github.com/gin-gonic/gin"
 	"mime"
 	"path"
 	"path/filepath"
-	"toolbox/gomail"
-	"toolbox/gozap"
-	"toolbox/logging"
-	"toolbox/session"
-	"toolbox/session/cookie"
 	"sync"
 	"testing"
-	"toolbox/store"
 )
 
 func TestStore(t *testing.T)  {
