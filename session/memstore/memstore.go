@@ -2,7 +2,7 @@ package memstore
 
 import (
 	"github.com/quasoft/memstore"
-	"github.com/cilidm/toolbox/session"
+	"toolbox/session"
 )
 
 type Store interface {
