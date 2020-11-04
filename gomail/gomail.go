@@ -35,6 +35,6 @@ func SendMail(conf Config) error {
 	m.SetHeader("Subject", conf.Subject)
 	m.SetBody("text/html", conf.Config.EmailTemplate)
 	d := gomail.NewDialer(conf.Config.EmailHost, port, conf.Config.EmailUser, conf.Config.EmailPwd)
-	err := d.DialAndSend(m)
+	err = d.DialAndSend(m)
 	return err
 }
