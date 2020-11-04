@@ -135,3 +135,15 @@ func IsEmail(b []byte) bool {
 	var emailPattern = regexp.MustCompile("[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[a-zA-Z0-9](?:[\\w-]*[\\w])?")
 	return emailPattern.Match(b)
 }
+
+func GbkAsUtf8(str string) string {
+	srcDecoder := mahonia.NewDecoder("gbk")
+	desDecoder := mahonia.NewDecoder("utf-8")
+	resStr := srcDecoder.ConvertString(str)
+	_, resBytes, _ := desDecoder.Translate([]byte(resStr), true)
+	return string(resBytes)
+}
+
+func JobKey(taskId, serverId int) int {
+	return taskId*100000 + serverId
+}
