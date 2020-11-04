@@ -3,6 +3,7 @@ package str
 import (
 	"crypto/md5"
 	"encoding/base64"
+	"github.com/axgle/mahonia"
 	"fmt"
 	"math/rand"
 	"os"
