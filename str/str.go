@@ -3,8 +3,8 @@ package str
 import (
 	"crypto/md5"
 	"encoding/base64"
-	"github.com/axgle/mahonia"
 	"fmt"
+	"github.com/axgle/mahonia"
 	"math/rand"
 	"os"
 	"reflect"
@@ -98,6 +98,9 @@ func Struct2MapByTag(obj interface{},tagName string) map[string]interface{} {
 
 	var data = make(map[string]interface{})
 	for i := 0; i < t.NumField(); i++ {
+		if t.Field(i).Tag.Get(tagName) == ""{
+			continue
+		}
 		data[t.Field(i).Tag.Get(tagName)] = v.Field(i).Interface()
 	}
 	return data
@@ -137,14 +140,14 @@ func IsEmail(b []byte) bool {
 	return emailPattern.Match(b)
 }
 
+func JobKey(taskId, serverId int) int {
+	return taskId*100000 + serverId
+}
+
 func GbkAsUtf8(str string) string {
 	srcDecoder := mahonia.NewDecoder("gbk")
 	desDecoder := mahonia.NewDecoder("utf-8")
 	resStr := srcDecoder.ConvertString(str)
 	_, resBytes, _ := desDecoder.Translate([]byte(resStr), true)
 	return string(resBytes)
-}
-
-func JobKey(taskId, serverId int) int {
-	return taskId*100000 + serverId
 }
