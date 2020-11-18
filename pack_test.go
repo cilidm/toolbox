@@ -2,14 +2,18 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"mime"
 	"path"
 	"path/filepath"
 	"sync"
 	"testing"
+	"toolbox/Os"
 	"toolbox/gomail"
 	"toolbox/gozap"
 	"toolbox/logging"
+	"toolbox/net"
+	"toolbox/rand"
 	"toolbox/session"
 	"toolbox/session/cookie"
 	"toolbox/store"
@@ -74,4 +78,25 @@ func SetSession(c *gin.Context)  {
 	ses.Save()
 	sessionID := ses.SessionId()
 	SessionList.Store(sessionID, c)
+}
+
+func TestNet(t *testing.T)  {
+	localIP,err := net.LocalIP()
+	fmt.Printf(localIP,err)
+	mac,err := net.LocalMac()
+	fmt.Printf(mac,err)
+}
+
+func TestOs(t *testing.T)  {
+	darwin := OS.IsDarwin()
+	fmt.Println(darwin)
+	pwd := OS.Pwd()
+	t.Log(pwd)
+}
+
+func TestRand(t *testing.T)  {
+	r := rand.Int(0,100)
+	t.Log(r)
+	rs := rand.String(10)
+	t.Log(rs)
 }
