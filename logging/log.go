@@ -41,8 +41,20 @@ func Debug(v ...interface{}) {
 	logger.Println(v)
 }
 
+func DebugPrint(v ...interface{}) {
+	setPrefix(DEBUG)
+	logger.Println(v)
+}
+
 func Info(v ...interface{}) {
 	setPrefix(INFO)
+	fmt.Println(v)
+	logger.Println(v)
+}
+
+func InfoPrint(v ...interface{}) {
+	setPrefix(INFO)
+	fmt.Println(v)
 	logger.Println(v)
 }
 
@@ -51,13 +63,31 @@ func Warn(v ...interface{}) {
 	logger.Println(v)
 }
 
+func WarnPrint(v ...interface{}) {
+	setPrefix(WARNING)
+	fmt.Println(v)
+	logger.Println(v)
+}
+
 func Error(v ...interface{}) {
 	setPrefix(ERROR)
 	logger.Println(v)
 }
 
+func ErrorPrint(v ...interface{}) {
+	setPrefix(ERROR)
+	fmt.Println(v)
+	logger.Println(v)
+}
+
 func Fatal(v ...interface{}) {
 	setPrefix(FATAL)
+	logger.Fatalln(v)
+}
+
+func FatalPrint(v ...interface{}) {
+	setPrefix(FATAL)
+	fmt.Println(v)
 	logger.Fatalln(v)
 }
 

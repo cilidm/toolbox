@@ -3,8 +3,8 @@ package redis
 import (
 	"errors"
 	"github.com/boj/redistore"
+	"github.com/cilidm/toolbox/session"
 	"github.com/gomodule/redigo/redis"
-	"toolbox/session"
 )
 
 type Store interface {

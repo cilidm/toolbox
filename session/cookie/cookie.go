@@ -1,8 +1,8 @@
 package cookie
 
 import (
+	"github.com/cilidm/toolbox/session"
 	gs "github.com/gorilla/sessions"
-	"toolbox/session"
 )
 
 type Store interface {
