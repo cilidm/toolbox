@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
+	"github.com/qiniu/go-sdk/v7/auth/qbox"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -13,8 +14,9 @@ import (
 	"time"
 
 	"github.com/astaxie/beego/httplib"
-	"github.com/qiniu/api.v7/v7/auth/qbox"
-	"github.com/qiniu/api.v7/v7/storage"
+	"github.com/qiniu/go-sdk/v7/storage"
+	// "github.com/qiniu/api.v7/v7/auth/qbox"
+	// "github.com/qiniu/api.v7/v7/storage"
 )
 
 type QINIU struct {

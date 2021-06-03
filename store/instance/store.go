@@ -1,9 +1,10 @@
-package store
+package instance
 
 import (
 	"errors"
-	"github.com/cilidm/toolbox/store/cloud"
 	"reflect"
+
+	"github.com/cilidm/toolbox/store/cloud"
 )
 
 // 创建云存储
@@ -11,9 +12,7 @@ import (
 // storetype 云存储对应的名字
 // private false不使用普通网络
 func NewCloudStore(storeConf Config, private bool) (cs *CloudStore, err error) {
-	//csc := storeEntity.FindOne()
 	storeType := storeConf.CloudType
-	//storeType := csc.CloudType
 	config := GetConfigType(storeConf)
 	private = false
 	return NewCloudStoreWithConfig(config, storeType, private)

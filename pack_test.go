@@ -2,7 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/cilidm/toolbox/Os"
+	"github.com/cilidm/toolbox/store/instance"
+	"mime"
+	"path"
+	"path/filepath"
+	"sync"
+	"testing"
+
+	OS "github.com/cilidm/toolbox/Os"
 	"github.com/cilidm/toolbox/gomail"
 	"github.com/cilidm/toolbox/gozap"
 	"github.com/cilidm/toolbox/logging"
@@ -10,23 +17,17 @@ import (
 	"github.com/cilidm/toolbox/rand"
 	"github.com/cilidm/toolbox/session"
 	"github.com/cilidm/toolbox/session/cookie"
-	"github.com/cilidm/toolbox/store"
 	"github.com/gin-gonic/gin"
-	"mime"
-	"path"
-	"path/filepath"
-	"sync"
-	"testing"
 )
 
 func TestStore(t *testing.T) {
-	var conf store.Config
+	var conf instance.Config
 	conf.CloudType = "qiniu"
-	conf.AccessKey = ""
-	conf.SecretKey = ""
-	conf.PublicBucket = ""
-	conf.PublicBucketDomain = "http://xxx.xxx.xxx/"
-	cloud, err := store.NewCloudStore(conf, false)
+	conf.AccessKey = "your accessKey"
+	conf.SecretKey = "your secretKey"
+	conf.PublicBucket = "your publicBucket"
+	conf.PublicBucketDomain = "http://your publicBucketDomain/"
+	cloud, err := instance.NewCloudStore(conf, false)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
