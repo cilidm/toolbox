@@ -1,149 +1,61 @@
 package session
 
 import (
+	"errors"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-contrib/sessions/memstore"
+	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/context"
-	"github.com/gorilla/sessions"
-	"log"
-	"net/http"
 )
 
-const (
-	DefaultKey  = "goSessions"
-	errorFormat = "[sessions] ERROR! %s\n"
-)
-
-type Store interface {
-	sessions.Store
-	Options(Options)
+// 使用 Cookie 保存 session
+func EnableCookieSession(key string) gin.HandlerFunc {
+	store := cookie.NewStore([]byte(key))
+	store.Options(sessions.Options{Path: "/", MaxAge: 24 * 3600})
+	return sessions.Sessions("_SESSION", store)
 }
 
-// Wraps thinly gorilla-session methods.
-// Session stores the values and optional configuration for a session.
-type Session interface {
-	SessionId() string
-	// GET returns the session value associated to the given key.
-	Get(key interface{}) interface{}
-	// Set sets the session value associated to the given key.
-	Set(key interface{}, val interface{})
-	// DELETE removes the session value associated to the given key.
-	Delete(key interface{})
-	// Clear deletes all values in the session.
-	Clear()
-	// AddFlash adds a flash message to the session.
-	// A single variadic argument is accepted, and it is optional: it defines the flash key.
-	// If not defined "_flash" is used by default.
-	AddFlash(value interface{}, vars ...string)
-	// Flashes returns a slice of flash messages from the session.
-	// A single variadic argument is accepted, and it is optional: it defines the flash key.
-	// If not defined "_flash" is used by default.
-	Flashes(vars ...string) []interface{}
-	// OPTIONS sets configuration for a session.
-	Options(Options)
-	// Save saves all sessions used during the current request.
-	Save() error
+// 使用 Redis 保存 session
+func EnableRedisSession(key string) gin.HandlerFunc {
+	store, _ := redis.NewStore(10, "tcp", "127.0.0.1:6379", "", []byte(key))
+	store.Options(sessions.Options{Path: "/", MaxAge: 6 * 3600})
+	return sessions.Sessions("_SESSION", store)
 }
 
-func Sessions(name string, store Store) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		s := &session{name, c.Request, store, nil, false, c.Writer}
-		c.Set(DefaultKey, s)
-		defer context.Clear(c.Request)
-		c.Next()
-	}
+// 使用 内存 保存 session
+func EnableMemorySession(key string) gin.HandlerFunc {
+	store := memstore.NewStore([]byte(key))
+	store.Options(sessions.Options{Path: "/", MaxAge: 6 * 3600})
+	return sessions.Sessions("_SESSION", store)
 }
 
-func SessionsMany(names []string, store Store) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		sessions := make(map[string]Session, len(names))
-		for _, name := range names {
-			sessions[name] = &session{name, c.Request, store, nil, false, c.Writer}
-		}
-		c.Set(DefaultKey, sessions)
-		defer context.Clear(c.Request)
-		c.Next()
-	}
-}
-
-type session struct {
-	name    string
-	request *http.Request
-	store   Store
-	session *sessions.Session
-	written bool
-	writer  http.ResponseWriter
-}
-
-func (s *session) SessionId() string {
-	return s.Session().ID
-}
-
-func (s *session) Get(key interface{}) interface{} {
-	return s.Session().Values[key]
-}
-
-func (s *session) Set(key interface{}, val interface{}) {
-	s.Session().Values[key] = val
-	s.written = true
-}
-
-func (s *session) Delete(key interface{}) {
-	delete(s.Session().Values, key)
-	s.written = true
-}
-
-func (s *session) Clear() {
-	for key := range s.Session().Values {
-		s.Delete(key)
-	}
-}
-
-func (s *session) AddFlash(value interface{}, vars ...string) {
-	s.Session().AddFlash(value, vars...)
-	s.written = true
-}
-
-func (s *session) Flashes(vars ...string) []interface{} {
-	s.written = true
-	return s.Session().Flashes(vars...)
-}
-
-func (s *session) Options(options Options) {
-	s.Session().Options = options.ToGorillaOptions()
-}
-
-func (s *session) Save() error {
-	if s.Written() {
-		e := s.Session().Save(s.request, s.writer)
-		if e == nil {
-			s.written = false
-		}
-		return e
+func Set(c *gin.Context, key string, value interface{}) (err error) {
+	s := sessions.Default(c)
+	s.Set(key, value)
+	err = s.Save()
+	if err != nil {
+		return err
 	}
 	return nil
 }
 
-func (s *session) Session() *sessions.Session {
-	if s.session == nil {
-		var err error
-		s.session, err = s.store.Get(s.request, s.name)
-		if err != nil {
-			log.Printf(errorFormat, err)
-		}
+func Get(c *gin.Context, key string) interface{} {
+	s := sessions.Default(c)
+	return s.Get(key)
+}
+
+func Del(c *gin.Context, key string) error {
+	s := sessions.Default(c)
+	s.Delete(key)
+	return s.Save()
+}
+
+func GetSessionId(c *gin.Context) (int64, error) {
+	s := sessions.Default(c)
+	auth, ok := s.Get("uid").(uint)
+	if !ok {
+		return 0, errors.New("无用户session")
 	}
-	return s.session
-}
-
-func (s *session) Written() bool {
-	return s.written
-}
-
-// shortcut to get session
-func Default(c *gin.Context) Session {
-	return c.MustGet(DefaultKey).(Session)
-}
-
-// shortcut to get session with given name
-func DefaultMany(c *gin.Context, name string) Session {
-	return c.MustGet(DefaultKey).(map[string]Session)[name]
+	return int64(auth), nil
 }
