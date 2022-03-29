@@ -25,8 +25,8 @@ type dbRepo struct {
 	DbW *gorm.DB
 }
 
-func New(config Config) (Repo, error) {
-	cfg := config.MySQL
+func New(config *Config) (Repo, error) {
+	cfg := config
 	dbr, err := dbConnect(cfg.Read.User, cfg.Read.Pass, cfg.Read.Addr, cfg.Read.Name,
 		cfg.Base.MaxOpenConn, cfg.Base.MaxIdleConn, cfg.Base.ConnMaxLifeTime)
 	if err != nil {
