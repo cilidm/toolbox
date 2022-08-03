@@ -2,6 +2,7 @@ package uuid
 
 import (
 	"github.com/google/uuid"
+	"log"
 )
 
 // UUID Define alias
@@ -16,7 +17,7 @@ func NewUUID() (UUID, error) {
 func MustUUID() UUID {
 	v, err := NewUUID()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	return v
 }

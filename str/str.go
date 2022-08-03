@@ -20,7 +20,7 @@ func Md5(buf []byte) string {
 	return fmt.Sprintf("%x", hash.Sum(nil))
 }
 
-// 用b的所有字段覆盖a的
+// CopyFields 用b的所有字段覆盖a的
 // 如果fields不为空, 表示用b的特定字段覆盖a的
 // a应该为结构体指针
 func CopyFields(a interface{}, b interface{}, fields ...string) (err error) {
@@ -62,7 +62,7 @@ func CopyFields(a interface{}, b interface{}, fields ...string) (err error) {
 	return
 }
 
-// 结构体转map gorm Updates不会更新结构体里的0及空，需转换成map
+// Struct2Map 结构体转map gorm Updates不会更新结构体里的0及空，需转换成map
 // 此方法不适用此情景，更新为Struct2MapByTag
 func Struct2Map(obj interface{}) map[string]interface{} {
 	t := reflect.TypeOf(obj)
@@ -75,7 +75,7 @@ func Struct2Map(obj interface{}) map[string]interface{} {
 	return data
 }
 
-// 数组转字符串 逗号分割
+// Array2Str 数组转字符串 逗号分割
 func Array2Str(s interface{}) string {
 	return strings.Replace(strings.Trim(fmt.Sprint(s), "[]"), " ", ",", -1)
 }
@@ -93,13 +93,13 @@ func GetBase64ByFile(path string) (string, error) {
 	return sourcestring, nil
 }
 
-func Struct2MapByTag(obj interface{},tagName string) map[string]interface{} {
+func Struct2MapByTag(obj interface{}, tagName string) map[string]interface{} {
 	t := reflect.TypeOf(obj)
 	v := reflect.ValueOf(obj)
 
 	var data = make(map[string]interface{})
 	for i := 0; i < t.NumField(); i++ {
-		if t.Field(i).Tag.Get(tagName) == ""{
+		if t.Field(i).Tag.Get(tagName) == "" {
 			continue
 		}
 		data[t.Field(i).Tag.Get(tagName)] = v.Field(i).Interface()
@@ -107,7 +107,7 @@ func Struct2MapByTag(obj interface{},tagName string) map[string]interface{} {
 	return data
 }
 
-// 判断字符串是否在数组里
+// IsContain 判断字符串是否在数组里
 func IsContain(items []string, item string) bool {
 	for _, eachItem := range items {
 		if eachItem == item {
@@ -124,7 +124,7 @@ func SetPassword(len int, pwdO string) (pwd string, salt string) {
 	return pwd, salt
 }
 
-//生成随机字符串
+// GetRandomString 生成随机字符串
 func GetRandomString(lens int) string {
 	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	bytes := []byte(str)
@@ -158,7 +158,7 @@ func FromBytes(bytes []byte) string {
 	return *(*string)(unsafe.Pointer(&bytes))
 }
 
-// Bytes converts the specified str to a byte array.
+// ToBytes Bytes converts the specified str to a byte array.
 func ToBytes(str string) []byte {
 	x := (*[2]uintptr)(unsafe.Pointer(&str))
 	h := [3]uintptr{x[0], x[1], x[1]}
@@ -193,4 +193,3 @@ func LCS(s1 string, s2 string) string {
 	}
 	return s1[xLongest-longest : xLongest]
 }
-

@@ -16,4 +16,6 @@
 .idea
 .vscode
 
+runtime
+
 *.sum

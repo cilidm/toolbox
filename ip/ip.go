@@ -31,7 +31,7 @@ func GetCityByIp(ip string) string {
 	return ""
 }
 
-//src 字符串
+// ConvertToString src 字符串
 //srcCode 字符串当前编码
 //tagCode 要转换的编码
 func ConvertToString(src string, srcCode string, tagCode string) string {

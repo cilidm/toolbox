@@ -58,7 +58,7 @@ func InitTrans(locale string) (err error) {
 	return
 }
 
-// 绑定模型获取验证错误的方法
+// GetValidateError 绑定模型获取验证错误的方法
 func GetValidateError(err error) (ret string) {
 	if validationErrors, ok := err.(validator.ValidationErrors); !ok {
 		return err.Error()

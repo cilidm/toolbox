@@ -7,11 +7,7 @@ import (
 	"time"
 )
 
-var (
-	version string
-	incrNum uint64
-	pid     = os.Getpid()
-)
+var incrNum uint64
 
 // NewTraceID New trace id
 func NewTraceID() string {

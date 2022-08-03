@@ -22,7 +22,7 @@ func Error(err error,funStr,event string)  {
 	zapLog.Error("error",zap.Any("error",err),zap.Any("function",funStr),zap.Any("event",event))
 }
 
-// loglevel 日志级别
+// InitLogger loglevel 日志级别
 func InitLogger(logpath string, loglevel string){
 	once.Do(func() {
 		hook := lumberjack.Logger{

@@ -14,21 +14,21 @@ func NewPool(size int) *Pool {
 	return &Pool{queue: make(chan int, size), wg: &sync.WaitGroup{}}
 }
 
-func (this *Pool) Add(size int) {
+func (p *Pool) Add(size int) {
 	for i := 0; i < size; i++ { // size > 0
-		this.queue <- 1
+		p.queue <- 1
 	}
 	for i := 0; i > size; i-- { // size < 0
-		<-this.queue
+		<-p.queue
 	}
-	this.wg.Add(size)
+	p.wg.Add(size)
 }
 
-func (this *Pool) Done() {
-	<-this.queue
-	this.wg.Done()
+func (p *Pool) Done() {
+	<-p.queue
+	p.wg.Done()
 }
 
-func (this *Pool) Wait() {
-	this.wg.Wait()
+func (p *Pool) Wait() {
+	p.wg.Wait()
 }

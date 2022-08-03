@@ -1,4 +1,4 @@
-package OS
+package goos
 
 import (
 	"bytes"
