@@ -1,6 +1,7 @@
 package file
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -162,6 +163,50 @@ func CopyDir(source string, dest string) (err error) {
 				return err
 			}
 		}
+	}
+	return nil
+}
+
+func AppendWrite(filepath, content string) error {
+	file, err := os.OpenFile(filepath, os.O_RDWR|os.O_APPEND, 0666)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	writer := bufio.NewWriter(file)
+	writer.WriteString(content)
+	writer.Flush()
+	return nil
+}
+
+func WriteFile(filePath, content string, append bool) error {
+	var (
+		file *os.File
+		err  error
+	)
+	if append {
+		//使用追加模式打开文件
+		file, err = os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	} else {
+
+		file, err = os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, 0666)
+	}
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	//写入文件
+	_, err = io.WriteString(file, content)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func IoWriteFile(filePath, content string) error {
+	if err := ioutil.WriteFile(filePath, []byte(content), 0666); err != nil {
+		return err
 	}
 	return nil
 }
