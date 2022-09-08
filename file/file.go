@@ -9,6 +9,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sync"
 )
 
 // GetSize get the file size
@@ -112,16 +113,16 @@ func CopyFile(source string, dest string) (err error) {
 		return err
 	}
 	defer sourcefile.Close()
-	destfile, err := os.Create(dest)
+	destFile, err := os.Create(dest)
 	if err != nil {
 		return err
 	}
-	defer destfile.Close()
-	_, err = io.Copy(destfile, sourcefile)
+	defer destFile.Close()
+	_, err = io.Copy(destFile, sourcefile)
 	if err == nil {
-		sourceinfo, err := os.Stat(source)
+		sourceInfo, err := os.Stat(source)
 		if err != nil {
-			err = os.Chmod(dest, sourceinfo.Mode())
+			err = os.Chmod(dest, sourceInfo.Mode())
 		}
 	}
 	return nil
@@ -209,4 +210,34 @@ func IoWriteFile(filePath, content string) error {
 		return err
 	}
 	return nil
+}
+
+var linesPool = sync.Pool{
+	New: func() interface{} {
+		return make([]byte, 1024)
+	},
+}
+
+func ReadFile(source string) ([]byte, error) {
+	f, err := os.Open(source)
+	if err != nil {
+		return nil, err
+	}
+	chunks := make([]byte, 1024, 1024)
+	r := bufio.NewReader(f)
+	for {
+		buf := linesPool.Get().([]byte)
+		n, err := r.Read(buf)
+		if n == 0 {
+			if err != nil {
+				fmt.Println(err)
+				break
+			}
+			if err == io.EOF {
+				break
+			}
+		}
+		chunks = append(chunks, buf[:n]...)
+	}
+	return chunks,nil
 }

@@ -25,10 +25,13 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/qiniu/go-sdk/v7 v7.9.6
 	github.com/satori/go.uuid v1.2.0 // indirect
+	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.23
+	github.com/tklauser/go-sysconf v0.3.10 // indirect
 	github.com/upyun/go-sdk v2.1.0+incompatible
+	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	go.uber.org/zap v1.16.0
 	golang.org/x/text v0.3.5
 	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba // indirect
